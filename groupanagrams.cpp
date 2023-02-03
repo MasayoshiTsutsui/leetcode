@@ -3,15 +3,19 @@
 #include <map>
 #include <stack>
 #include <queue>
-#include <unordered_map>
 #include <unordered_set>
 #include <string>
+#include <unordered_map>
+#include <algorithm>
 using namespace std;
 
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
         unordered_map<string, vector<string>> map;
+        vector<vector<string>> ans;
+        int newansidx = 0;
+
 
         for (int i = 0; i < strs.size(); i++)
         {
