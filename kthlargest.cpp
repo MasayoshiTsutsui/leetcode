@@ -1,29 +1,38 @@
-#include <queue>
 #include <vector>
+#include <set>
+#include <map>
+#include <stack>
+#include <unordered_map>
+#include <unordered_set>
+#include <string>
+using namespace std;
+#include <queue>
+
+
 class KthLargest {
 private:
-    int k;
-    std::priority_queue<int, std::vector<int>, std::greater<int>> queue;
+        priority_queue<int, vector<int>, greater<int>> heap;
+        int k;
 
 public:
-    KthLargest(int k, std::vector<int>& nums) {
+    KthLargest(int k, vector<int>& nums) {
         this->k = k;
-        for (int num : nums) 
+        for(int num : nums)
         {
-            this->queue.push(num);
+            this->heap.push(num);
         }
-
-        while (queue.size() > k)
+        while(this->heap.size() > k)
         {
-            this->queue.pop();
+            this->heap.pop();
         }
     }
     
     int add(int val) {
-        this->queue.push(val);
-        if(queue.size() > this->k) {
-            queue.pop();
+        this->heap.push(val);
+        while(this->heap.size() > k)
+        {
+            this->heap.pop();
         }
-        return queue.top();
+        return heap.top();
     }
 };

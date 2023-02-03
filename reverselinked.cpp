@@ -8,21 +8,15 @@ struct ListNode {
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-        if (head == NULL) {
-            return NULL;
-        }
-        ListNode* predhead = head;
-        ListNode* nexthead = head->next;
-        while (nexthead != NULL)
+        ListNode* pred = NULL;
+        while (head != NULL)
         {
-            ListNode* nexthead_tmp = nexthead->next;
-            nexthead->next = predhead;
-            predhead = nexthead;
-            nexthead = nexthead_tmp;
+            ListNode* tmp_nexthead = head->next;
+            head->next = pred;
+
+            pred = head;
+            head = tmp_nexthead;
         }
-        head->next = NULL;
-        return predhead;
-        
-        
+        return pred;
     }
 };

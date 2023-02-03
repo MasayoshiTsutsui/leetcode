@@ -1,38 +1,47 @@
-#include <string>
+#include <vector>
+#include <set>
+#include <map>
+#include <stack>
 #include <queue>
+#include <unordered_map>
+#include <unordered_set>
+#include <string>
 using namespace std;
+
 class Solution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        vector<pair<int, int> > cnts(nums.size());
-        vector<int> ans(k);
+        unordered_map<int, int> num_cnt;
+
         for (int i = 0; i < nums.size(); i++)
         {
-            cnts.at(i) = make_pair(0, i);
+            int num = nums.at(i);
+            if(!num_cnt.emplace(num, 1).second)
+            {
+                num_cnt.at(num)++;
+            }
         }
-    
 
-        for (int num : nums)
+        auto comp = [&](int l, int r)
         {
-            cnts.at();
+            return num_cnt.at(l) > num_cnt.at(r);
+        };
+        
+        priority_queue<int, vector<int>, decltype(comp)> heap(comp);
+
+        for (auto itr = num_cnt.begin(); itr != num_cnt.end(); itr++)
+        {
+            int num = itr->first;
+            heap.push(num);
         }
 
-        priority_queue<pair<int, int> > que(cnts.begin(), cnts.end());
+        vector<int> ans;
 
         for (int i = 0; i < k; i++)
         {
-            ans.at(i) = que.top();
+            ans.push_back(heap.top());
+            heap.pop();
         }
-        
-    
-
-
-        
-
-
-
-
-
-        
+        return ans;
     }
 };

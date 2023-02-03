@@ -1,4 +1,15 @@
- // Definition for singly-linked list.
+ 
+#include <vector>
+#include <set>
+#include <map>
+#include <stack>
+#include <queue>
+#include <unordered_map>
+#include <unordered_set>
+#include <string>
+using namespace std;
+
+// Definition for singly-linked list.
   struct ListNode {
       int val;
       ListNode *next;
@@ -10,26 +21,26 @@
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
-        if (head == NULL) {
-            return NULL;
-        }
-        ListNode *node = head;
-        int newestval = -101;
-        ListNode ans(newestval);
-        ListNode *cur_tail = &ans;
+        ListNode* sentinel = new ListNode(0, head);
+        ListNode* pred = sentinel;
 
-        while(node != NULL) {
-            if (node->val > newestval) {
-                if (node->next == NULL || node->val < node->next->val) {
-                    cur_tail->next = node;
-                    cur_tail = node;
+        while (head != NULL)
+        {
+            if (head->next != NULL && head->val == head->next->val)
+            {
+                while(head->next != NULL && head->val == head->next->val)
+                {
+                    head = head->next;
                 }
+                pred->next = head->next;
             }
-            newestval = node->val;
-            node = node->next;
+            else
+            {
+                pred = pred->next;
+            }
+            
+            head = head->next;
         }
-        
-        cur_tail->next = NULL;
-        return ans.next;
+        return sentinel->next;
     }
 };

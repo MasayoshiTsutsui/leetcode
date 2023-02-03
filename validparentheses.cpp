@@ -3,55 +3,56 @@
 class Solution {
 public:
     bool isValid(string s) {
-        std::stack<char> st;
-
-        for (char c : s) {
-            switch (c)
-            {
-            case '(':
-                st.push('(');
-                break;
-            case '{':
-                st.push('{');
-                break;
-            case '[':
-                st.push('[');
-                break;
-            case ')':
-                if(st.top() == '(') {
-                    st.pop();
-                }
-                else {
-                    return false;
-                }
-                break;
-            case '}':
-                if(st.top() == '{') {
-                    st.pop();
-                }
-                else {
-                    return false;
-                }
-                break;
-            case ']':
-                if(st.top() == '[') {
-                    st.pop();
-                }
-                else {
-                    return false;
-                }
-                break;
+        stack<char> stk;
+        for (size_t i = 0; i < s.size(); i++)
+        {
+            char c = s.at(i);
             
-            default:
-                return false;
+            if (c == '(' || c == '{' || c == '[')
+            {
+                stk.push(c);
+            }
+            else
+            {
+                if (c == ')')
+                {
+                    if (!stk.empty() && stk.top() == '(')
+                    {
+                        stk.pop();
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                if (c == '}')
+                {
+                    if (!stk.empty() && stk.top() == '{')
+                    {
+                        stk.pop();
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                if (c == ']')
+                {
+                    if (!stk.empty() && stk.top() == '[')
+                    {
+                        stk.pop();
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
         }
-        if (st.empty()) {
+        if (stk.empty())
+        {
             return true;
         }
-        else {
-            return false;
-        }
-        
+        return false;
     }
 };
