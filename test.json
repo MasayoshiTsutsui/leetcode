@@ -1,0 +1,1 @@
+[{"client": "A社","delivery_plans": [{"delivery_plan_id": 1,"target_date": "2022-08-20","goal_impressions": 36000,"budget": 36000},{"delivery_plan_id": 6,"target_date": "2022-08-23","goal_impressions": 17000,"budget": 18190},]},{"client": "B社","delivery_plans": [{"delivery_plan_id": 11,"target_date": "2022-08-23","goal_impressions": 18000,"budget": 14760}]}]
