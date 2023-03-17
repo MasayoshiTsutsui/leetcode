@@ -1,241 +1,65 @@
-#include <iostream>
-#include <string>
 #include <vector>
-#include <unordered_map>
+#include <set>
+#include <map>
+#include <stack>
 #include <queue>
+#include <unordered_map>
+#include <unordered_set>
+#include <string>
+#include <iostream>
 using namespace std;
 
+int main() {
+    // 各stoneの中心からの距離
+    vector<double> team1_dists;
+    vector<double> team2_dists;
 
-void step1() {
-    int m = 0;
-    cin >> m;
-    unordered_map<int, vector<int> > menuInfo;
-    for (int i = 0; i < m; i++)
+    for (size_t i = 0; i < 16; i++)
     {
-        vector<int> stockPrice(2);
-        int dishId; 
-
-        cin >> dishId; //dish Id
-        cin >> stockPrice.at(0); // stock
-        cin >> stockPrice.at(1); // price
-        menuInfo.emplace(dishId, stockPrice);
+        double x, y;
+        cin >> x >> y;
+        if (i % 2 == 0)
+        {
+            team1_dists.push_back(sqrt(x*x + y*y));
+        }
+        else
+        {
+            team2_dists.push_back(sqrt(x*x + y*y));
+        }
     }
-    while(1) {
-        string order; int table = -1; int dishId = -1; int orderNum = -1;
-        cin >> order >> table >> dishId >> orderNum;
-        if (order == "") {
-            break;
-        }
-        if (menuInfo.at(dishId).at(0) < orderNum) {
-            cout << "sold out " << table << endl;
-        }
-        else {
-            for (int _ = 0; _ < orderNum; _++)
+
+    double team1_min_dist = *min_element(team1_dists.begin(), team1_dists.end());
+    double team2_min_dist = *min_element(team2_dists.begin(), team2_dists.end());
+
+    if (team1_min_dist > 30. && team2_min_dist > 30.)
+    {
+        cout << 0 << " " << 0 << endl;
+        return 0;
+    }
+    if (team1_min_dist < team2_min_dist)
+    {
+        double threshold = min(team2_min_dist, 30.);
+        int points = 0;
+        for (size_t i = 0; i < team1_dists.size(); i++)
+        {
+            if (team1_dists.at(i) < threshold)
             {
-                cout << "received order " << table  << " " << dishId << endl;
+                points++;
             }
-            menuInfo.at(dishId).at(0) -= orderNum;
         }
+        cout << points << " " << 0 << endl;
     }
-}
-
-void step2() {
-    queue<int> OrderQue;
-    int m = -1; int lengeNum = -1;
-    cin >> m >> lengeNum;
-    unordered_map<int, vector<int> > menuInfo;
-    unordered_map<int, int> nowCooking;
-    for (int i = 0; i < m; i++)
-    {
-        vector<int> stockPrice(2);
-        int dishId; 
-
-        cin >> dishId; //dish Id
-        cin >> stockPrice.at(0); // stock
-        cin >> stockPrice.at(1); // price
-        menuInfo.emplace(dishId, stockPrice);
-        nowCooking.emplace(dishId, 0);
+    else {
+        double threshold = min(team1_min_dist, 30.);
+        int points = 0;
+        for (size_t i = 0; i < team2_dists.size(); i++)
+        {
+            if (team2_dists.at(i) < threshold)
+            {
+                points++;
+            }
+        }
+        cout << 0 << " " << points << endl;
     }
-    while(1) {
-        string firstString;
-        cin >> firstString;
-        if (firstString == "complete") {
-            int dishId = -1;
-            cin >> dishId;
-            if (nowCooking.at(dishId) <= 0) {
-                cout << "unexpected input" << endl;
-            }
-            else {
-                nowCooking.at(dishId)--;
-                lengeNum++;
-                if (!OrderQue.empty()) {
-                    lengeNum--;
-                    int nextDish = OrderQue.front();
-                    OrderQue.pop();
-                    nowCooking.at(nextDish)++;
-                    cout << "ok" << " " << nextDish << endl;
-                }
-                else {
-                    cout << "ok" << endl;
-                }
-            }
-        }
-        else if (firstString == "received"){
-            string order; int table = -1; int dishId = -1;;
-            cin >> order >> table >> dishId;
-            if (order != "order") {
-                cout << "error!!!!!" << endl;
-                break;
-            }
-            if (lengeNum > 0) {
-                lengeNum--;
-                nowCooking.at(dishId)++;
-                cout << dishId << endl;
-            }
-            else {
-                cout << "wait" << endl;
-                OrderQue.push(dishId);
-            }
-        }
-        else {
-            break;
-        }
-    }
-}
-
-void step3() {
-    int m = -1;
-    cin >> m;
-    unordered_map<int, vector<int> > menuInfo;
-    unordered_map<int, queue<int> > dishId_Tables;
-    for (int i = 0; i < m; i++)
-    {
-        vector<int> stockPrice(2);
-        int dishId; 
-
-        cin >> dishId; //dish Id
-        cin >> stockPrice.at(0); // stock
-        cin >> stockPrice.at(1); // price
-        menuInfo.emplace(dishId, stockPrice);
-        dishId_Tables.emplace(dishId, queue<int>());
-    }
-    while(1) {
-        string firstString;
-        cin >> firstString;
-        if (firstString == "complete") {
-            int dishId = -1;
-            cin >> dishId;
-            cout << "ready " << dishId_Tables.at(dishId).front() << " " << dishId << endl;
-            dishId_Tables.at(dishId).pop();
-        }
-        else if (firstString == "received"){
-            string order; int table = -1; int dishId = -1;;
-            cin >> order >> table >> dishId;
-            if (order != "order") {
-                cout << "error!!!!!" << endl;
-                break;
-            }
-            dishId_Tables.at(dishId).push(table);
-        }
-        else {
-            break;
-        }
-    }
-}
-
-void step4() {
-    int m = -1;
-    cin >> m;
-    unordered_map<int, vector<int> > menuInfo;
-    unordered_map<int, int> table_unservedDishnum;
-    unordered_map<int, int> table_bills;
-
-    for (int i = 0; i < m; i++)
-    {
-        vector<int> stockPrice(2);
-        int dishId; 
-
-        cin >> dishId; //dish Id
-        cin >> stockPrice.at(0); // stock
-        cin >> stockPrice.at(1); // price
-        menuInfo.emplace(dishId, stockPrice);
-    }
-    while(1) {
-        string firstString;
-        cin >> firstString;
-        if (firstString == "ready") {
-            int table = -1; int dishId = -1;
-            cin >> table >> dishId;
-            table_bills.at(table) += menuInfo.at(dishId).at(1);
-            table_unservedDishnum.at(table)--;
-        }
-        else if (firstString == "received"){
-            string order; int table = -1; int dishId = -1;;
-            cin >> order >> table >> dishId;
-            if (order != "order") {
-                cout << "error!!!!!" << endl;
-                break;
-            }
-
-            if (table_bills.find(table) == table_bills.end()) {
-                table_bills.emplace(table, 0);
-            }
-            if (table_unservedDishnum.find(table) == table_unservedDishnum.end()) {
-                table_unservedDishnum.emplace(table, 0);
-            }
-            table_unservedDishnum.at(table)++;
-        }
-        else if (firstString == "check"){
-            int table = -1;
-            cin >> table;
-            
-            if (table_unservedDishnum.find(table) == table_unservedDishnum.end()) {
-                cout << 0 << endl;
-            }
-            else if (table_unservedDishnum.at(table) == 0) {
-                cout << table_bills.at(table) << endl;
-                table_bills.at(table) = 0;
-            }
-            else {
-                cout << "please wait" << endl;
-            }
-        }
-        else {
-            break;
-        }
-    }
-
-}
-
-
-int main(int argc, char *argv[]) {
-    int step = -1;
-    cin >> step;
-    
-
-    switch (step)
-    {
-    case 1:
-        step1();
-        break;
-    
-    case 2:
-        step2();
-        break;
-    
-    case 3:
-        step3();
-        break;
-    
-    case 4:
-        step4();
-        break;
-    
-    default:
-        break;
-    }
-
-
-
     return 0;
 }
